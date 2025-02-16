@@ -1,0 +1,736 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMisDDOmV0Y6qtVbKpKIT1T",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/DaramG-star/TIL/blob/master/IM%20%EB%8C%80%EB%B9%84%20%EC%BD%94%EB%93%9C%EC%A0%95%EB%A6%AC\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 회문"
+      ],
+      "metadata": {
+        "id": "75J_h82JngHY"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "x8m6kbKQfpIU"
+      },
+      "outputs": [],
+      "source": [
+        "T = int(input())\n",
+        "for t in range(1, T+1):\n",
+        "    N = int(input())\n",
+        "    arr = [list(map(input().strip()))]\n",
+        "    total = 0\n",
+        "\n",
+        "    # 가로 회문\n",
+        "    for i in range(8):\n",
+        "        for j in range(8-N+1):\n",
+        "            for k in range(N//2):\n",
+        "                if arr[i][j+k] != arr[i][j+N-1-k]:\n",
+        "                    break\n",
+        "            else:\n",
+        "                total += 1\n",
+        "\n",
+        "\n",
+        "    # 세로 회문\n",
+        "    for j in range(8):\n",
+        "        for i in range(8-N+1):\n",
+        "            for k in range(N//2):\n",
+        "                if arr[i][j+k] != arr[i][j+N-1-k]:\n",
+        "                    break\n",
+        "            else:\n",
+        "                total += 1\n",
+        "\n",
+        "    print(f'#{tc} {total}')\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = 10\n",
+        "for tc in range(1, T + 1):\n",
+        "    N = int(input())  # 시작 번호\n",
+        "    txt = [list(map(str, input())) for _ in range(100)]\n",
+        "    max_len = 0\n",
+        "\n",
+        "    # 가로 회문\n",
+        "    for len in range(100, 0, -1): #길이\n",
+        "        for i in range(100):  # 100줄\n",
+        "            for j in range(100 - len + 1): #열 순회\n",
+        "                for k in range(len//2): #검증\n",
+        "                    if txt[i][j + k] != txt[i][j + len - 1 - k]:\n",
+        "                        break\n",
+        "                else:\n",
+        "                    if max_len < len:\n",
+        "                        max_len = len\n",
+        "                        break\n",
+        "\n",
+        "    # 세로 회문\n",
+        "    for len in range(100, 0, -1):\n",
+        "        for i in range(100):  # 100줄\n",
+        "            for j in range(100 - len + 1): #열 순회\n",
+        "                for k in range(len//2): #검증\n",
+        "                    if txt[j + k][i] != txt[j + len - 1 - k][i]:\n",
+        "                        break\n",
+        "                else:\n",
+        "                    if max_len < len:\n",
+        "                        max_len = len\n",
+        "                    break\n",
+        "\n",
+        "    print(f'#{tc} {max_len}')"
+      ],
+      "metadata": {
+        "id": "9pCPkgqDrsbc"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 특별한 정렬"
+      ],
+      "metadata": {
+        "id": "ZLE-6S0unjFp"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def selectionsort(A, N):\n",
+        "    for i in range(N-1):\n",
+        "        for j in range(i, N):\n",
+        "            if i % 2 == 0:\n",
+        "                if A[i] < A[j]:\n",
+        "                    A[i], A[j] = A[j], A[i]\n",
+        "            if i % 2 == 1:\n",
+        "                if A[i] > A[j]:\n",
+        "                     A[i], A[j] = A[j], A[i]"
+      ],
+      "metadata": {
+        "id": "D6j7rGAbkKRo"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 달팽이 숫자"
+      ],
+      "metadata": {
+        "id": "gH4m7qE-ncjx"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "for t in range(1, T+1):\n",
+        "    N = int(input())\n",
+        "    arr = [[0]*N for _ in range(N)]\n",
+        "    x, y = 0, 0\n",
+        "    num = 1\n",
+        "    d = 0\n",
+        "    dx = [0, 1, 0, -1]\n",
+        "    dy = [1, 0, -1, 0]\n",
+        "\n",
+        "    for num in range(N*N):\n",
+        "        arr[x][y] = num\n",
+        "\n",
+        "        ni = x + dx[d]\n",
+        "        nj = y + dy[d]\n",
+        "\n",
+        "         if ni < 0 or ni >= N or nj < 0 or nj >= N or arr[ni][nj] != 0:\n",
+        "            d = (d+1) %4\n",
+        "            ni = x + dx[d]\n",
+        "            nj = y + dy[d]\n",
+        "        x, y = nx, ny\n",
+        "    print(f'#{tc}')\n",
+        "    for lst in arr:\n",
+        "        print(*lst)"
+      ],
+      "metadata": {
+        "id": "DJRJoZOalBJs"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 파리퇴치"
+      ],
+      "metadata": {
+        "id": "ydmwtu7Knwjo"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "\n",
+        "dx1 = [-1, 1, 0, 0]\n",
+        "dy1 = [0, 0, -1, 1]\n",
+        "\n",
+        "dx2 = [-1, 1, -1, 1]\n",
+        "dy2 = [-1, 1, 1, -1]\n",
+        "\n",
+        "for t in range(1, T+1):\n",
+        "    N, M = map(int, input().split())\n",
+        "    fly = [list(map(int, input().split())) for _ in range(N)]\n",
+        "\n",
+        "    max_flies = 0\n",
+        "\n",
+        "    for i in range(N):\n",
+        "        for j in range(N):\n",
+        "            plus_sum = fly[i][j]\n",
+        "            for d in range(4):\n",
+        "                for k in range(1, M):\n",
+        "                    ni, nj = i + dx1[d] * k, j + dy1[d] * k\n",
+        "                    if 0 <= ni < N and 0 <= nj < N:\n",
+        "                        plus_sum += fly[ni][nj]\n",
+        "\n",
+        "            cross_sum = fly[i][j]\n",
+        "            for d in range(4):\n",
+        "                for k in range(1, M):\n",
+        "                    ni, nj = i + dx2[d] * k, j + dy2[d] * k\n",
+        "                    if 0 <= ni < N and 0 <= nj < N:\n",
+        "                        cross_sum += fly[ni][nj]\n",
+        "\n",
+        "            max_flies = max(max_flies, plus_sum, cross_sum)\n",
+        "\n",
+        "    print(f\"#{t} {max_flies}\")"
+      ],
+      "metadata": {
+        "id": "UvP7kDZanyOL"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "for t in range(1, T+1):\n",
+        "    N, M = list(map(int, input().split()))\n",
+        "    fly = [list(map(int, input().split())) for _ in range(N)]\n",
+        "\n",
+        "    for i in range(N):\n",
+        "        for j in range(N):\n",
+        "            sum_fly = 0\n",
+        "\n",
+        "            for x in range(M):\n",
+        "                for y in range(M):\n",
+        "                    nx = i + x\n",
+        "                    ny = j + y\n",
+        "                    if 0 <= nx < N and 0 <= ny < N:\n",
+        "                        sum_fly += fly[nx][ny]\n",
+        "\n",
+        "            if max_fly < sum_fly:\n",
+        "                max_fly = sum_fly\n",
+        ""
+      ],
+      "metadata": {
+        "id": "GVfILvRiphqa"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 풍선팡"
+      ],
+      "metadata": {
+        "id": "XhiZJRHipb23"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "for t in range(1, T+1):\n",
+        "    N, M = list(map(int, input().split()))\n",
+        "    arr = [list(map(int, input().split())) for _ in range(N)]\n",
+        "\n",
+        "    dx = [0, 0, 1, -1]\n",
+        "    dy = [1, -1, 0, 0]\n",
+        "    max_arr = 0\n",
+        "\n",
+        "    for i in range(N):\n",
+        "        for j in range(M):\n",
+        "            sum_arr = 0\n",
+        "            me = arr[i][j]\n",
+        "\n",
+        "            if me == 0:\n",
+        "                continue\n",
+        "\n",
+        "\n",
+        "            for d in range(4):\n",
+        "                for k in range(1, me+1)\n",
+        "                    nx = i + dx[d] * k\n",
+        "                    ny = j + dy[d] * k\n",
+        "\n",
+        "                    if 0 <= ni < N and 0 <= nj < M:\n",
+        "                        sum_bl += arr[ni][nj]\n",
+        "\n",
+        "\n",
+        "            sum_arr += me\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "euIBqMAlpbEG"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Sum"
+      ],
+      "metadata": {
+        "id": "VozgNHQDrl76"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for _ in range(10):\n",
+        "    t = int(input())\n",
+        "    matrix = [list(map(int, input().split())) for _ in range(100)]  # 100×100 입력 받기\n",
+        "\n",
+        "    row_sums = [sum(row) for row in matrix]\n",
+        "    col_sums = [sum(col) for col in zip(*matrix)]\n",
+        "    right_diag_sum = sum(matrix[i][i] for i in range(100))  # 오른쪽 아래 대각선 합\n",
+        "    left_diag_sum = sum(matrix[i][99 - i] for i in range(100))  # 왼쪽 아래 대각선 합\n",
+        "\n",
+        "    # 최댓값 찾기 (행 최대, 열 최대, 두 대각선 중 최대)\n",
+        "    max_value = max(max(row_sums), max(col_sums), right_diag_sum, left_diag_sum)\n",
+        "\n",
+        "    # 출력 형식 맞추기\n",
+        "    print(f\"#{t} {max_value}\")"
+      ],
+      "metadata": {
+        "id": "4CxLZsJ6roFu"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 세로로 말해요"
+      ],
+      "metadata": {
+        "id": "kn3PIQ_xqYbv"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "for t in range(1, T+1):\n",
+        "    word = [list(map(input().strip())) for _ in range(5)]\n",
+        "\n",
+        "    max_col = max(len(row) for row in word)\n",
+        "    new_list = []\n",
+        "\n",
+        "    for j in range(max_col):\n",
+        "        for i in range(5):\n",
+        "            if j < len(word[i]):\n",
+        "                new_list.append(word[i][j])\n"
+      ],
+      "metadata": {
+        "id": "IRO4uaTcqaYw"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 전기버스"
+      ],
+      "metadata": {
+        "id": "3o44RZ_CrNWC"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def solve(charge, k, n, m):\n",
+        "    charge = [0] + charge + [n]  # 출발점과 도착점 추가\n",
+        "\n",
+        "    last = 0  # 마지막 충전기\n",
+        "    cnt = 0  # 충전횟수\n",
+        "    for i in range(1, m + 2):\n",
+        "        if charge[i] - charge[i - 1] > k:  # 충전기 사이가 k보다 크면 충전할 수 없음\n",
+        "            return 0\n",
+        "        if charge[i] > last + k:  # 충전할 수 없는 경우 앞쪽에서 충전\n",
+        "            last = charge[i - 1]\n",
+        "            cnt += 1\n",
+        "    return cnt\n",
+        "\n",
+        "\n",
+        "T = int(input())\n",
+        "for tc in range(1, T+1):\n",
+        "    # K : 한번 충전으로 이동할 수 있는 정류장 수\n",
+        "    # N : 정류장 수\n",
+        "    # M : 충전기 설치된 정류장 번호\n",
+        "    K, N, M = map(int, input().split())  # 1 ≤ K, N, M ≤ 100\n",
+        "    charge = list(map(int, input().split()))\n",
+        "    ans = solve(charge, K, N, M)\n",
+        "    print(f'#{tc} {ans}')"
+      ],
+      "metadata": {
+        "id": "ygYZrH8GrO-1"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 구간합"
+      ],
+      "metadata": {
+        "id": "oTN5XzOhuh8W"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "\n",
+        "for t in range(T):\n",
+        "    N, M = list(map(int, input().split()))\n",
+        "    lst = list(map(int, input().split()))\n",
+        "\n",
+        "\n",
+        "    sm = sum(lst[:M])\n",
+        "    mn = sm\n",
+        "    mx = sm\n",
+        "    for i in range (M, N):\n",
+        "        sm += lst[i]\n",
+        "        sm -= lst[i-M]\n",
+        "        if mn > sm:\n",
+        "            mn = sm\n",
+        "        if mx < sm:\n",
+        "            mx = sm\n",
+        "\n",
+        "    print(f\"#{t+1} {mx - mn}\")"
+      ],
+      "metadata": {
+        "id": "O0qV3_9IujMs"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 문자열 비교\n"
+      ],
+      "metadata": {
+        "id": "ZThoCxzpuqRz"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def BruteForce(pattern, text):\n",
+        "    M = len(pattern)\n",
+        "    N = len(text)\n",
+        "\n",
+        "    for i in range(N - M +1):\n",
+        "        j = 0\n",
+        "        while j < M and text[i+j] == pattern[j]:\n",
+        "            j += 1\n",
+        "        if j == M:\n",
+        "            return 1\n",
+        "\n",
+        "\n",
+        "    return 0\n",
+        "\n",
+        "T = int(input())\n",
+        "\n",
+        "for t in range(1, T + 1):\n",
+        "    pattern = input().strip()\n",
+        "    text = input().strip()\n",
+        "\n",
+        "    result = BruteForce(pattern, text)\n",
+        "    print(f\"#{t} {result}\")"
+      ],
+      "metadata": {
+        "id": "X12YWHPjurjk"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def BruteForce(pattern, text):\n",
+        "    M = len(pattern)\n",
+        "    N = len(text)\n",
+        "    total = 0\n",
+        "    i = 0  #  while문을 사용하여 패턴 찾기\n",
+        "\n",
+        "    while i < N - M + 1:  # 패턴이 들어갈 수 있는 범위에서만 탐색\n",
+        "        j = 0\n",
+        "        while j < M and text[i + j] == pattern[j]:  # 패턴 비교\n",
+        "            j += 1\n",
+        "        if j == M:  # 패턴이 완전히 일치하면\n",
+        "            total += 1  # 패턴 개수 증가\n",
+        "            i += M - 1  # `M-1` 만큼 건너뛰기!\n",
+        "        i += 1  # 기본적으로 한 칸씩 이동\n",
+        "\n",
+        "    return total"
+      ],
+      "metadata": {
+        "id": "LMQiHcqjvABY"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 돌뒤집기"
+      ],
+      "metadata": {
+        "id": "NPzkY4a2vZcO"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "testcase=int(input())\n",
+        "for tc in range(1,testcase+1):\n",
+        "    N,M=map(int,input().split())\n",
+        "    lst=list(map(int,input().split()))\n",
+        "\n",
+        "    for _ in range(M):\n",
+        "        i,j=map(int,input().split())\n",
+        "        i-=1\n",
+        "        for k in range(1,j+1):\n",
+        "            left=i-k\n",
+        "            right=i+k\n",
+        "            if left<0 or right==len(lst):\n",
+        "                break\n",
+        "            if lst[left]==lst[right]:\n",
+        "                lst[left]=1-lst[left]\n",
+        "                lst[right]=1-lst[right]\n",
+        "    print(f'#{tc}',*lst)"
+      ],
+      "metadata": {
+        "id": "ovTQxdePvafX"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 스위치 조작"
+      ],
+      "metadata": {
+        "id": "kvhSuEowvzfn"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "for tc in range(1, T+1):\n",
+        "    N = int(input())\n",
+        "    Ai = list(map(int, input().split()))\n",
+        "    Bi = list(map(int, input().split()))\n",
+        "\n",
+        "    cnt = 0\n",
+        "    for i in range(N):              # 전체 스위치 체크\n",
+        "        if Ai[i] != Bi[i]:          # 각 숫자가 같지 않다면\n",
+        "            for j in range(i, N):   # 숫자 뒤집기\n",
+        "                if Ai[j] == 0:      # 숫자 다른데 Ai가 0이면\n",
+        "                    Ai[j] = 1       # 1로 변경\n",
+        "                else:               # 숫자 다른데 Ai가 1이면\n",
+        "                    Ai[j] = 0       # 0으로 변경\n",
+        "            cnt += 1                # 카운트 + 1\n",
+        "        else:\n",
+        "            pass\n",
+        "\n",
+        "    print(f'#{tc} {cnt}')"
+      ],
+      "metadata": {
+        "id": "E6AItShXvzBl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 어디에 단어가 들어갈 수 있을까"
+      ],
+      "metadata": {
+        "id": "wS7e7b0TwUdK"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = int(input())\n",
+        "\n",
+        "for t in range(1, T+1):\n",
+        "    N, K = map(int, input().split())  # 퍼즐 크기 N, 단어 길이 K\n",
+        "    puzzle = [list(map(int, input().split())) for _ in range(N)]\n",
+        "\n",
+        "    total_count = 0  # K 길이의 단어가 들어갈 수 있는 자리 개수\n",
+        "\n",
+        "    # 가로 탐색\n",
+        "    for i in range(N):\n",
+        "        cnt = 0\n",
+        "        for j in range(N):\n",
+        "            if puzzle[i][j] == 1:\n",
+        "                cnt += 1  # 1이 나오면 개수 증가\n",
+        "            else:\n",
+        "                if cnt == K:  # K만큼 연속된 1이었으면 카운트 증가\n",
+        "                    total_count += 1\n",
+        "                cnt = 0  # 0을 만나면 초기화\n",
+        "        if cnt == K:  # 행 끝에서 마지막 연속된 부분 체크\n",
+        "            total_count += 1\n",
+        "\n",
+        "    # 세로 탐색\n",
+        "    for j in range(N):\n",
+        "        cnt = 0\n",
+        "        for i in range(N):\n",
+        "            if puzzle[i][j] == 1:\n",
+        "                cnt += 1\n",
+        "            else:\n",
+        "                if cnt == K:\n",
+        "                    total_count += 1\n",
+        "                cnt = 0\n",
+        "        if cnt == K:\n",
+        "            total_count += 1\n",
+        "\n",
+        "    print(f\"#{t} {total_count}\")  # 정답 출력"
+      ],
+      "metadata": {
+        "id": "jFD85oNRwWmu"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# 두 개의 숫자열"
+      ],
+      "metadata": {
+        "id": "BOeV9_otwuKy"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def my_multi(N, M, Ai, Bi):\n",
+        "    if N > M:\n",
+        "        N, M = M, N\n",
+        "        Ai, Bi = Bi, Ai\n",
+        "\n",
+        "    max_multi = float('-inf')\n",
+        "\n",
+        "    for i in range(M - N + 1):  # M-N+1개의 가능한 위치 탐색\n",
+        "        curr_multi = 0\n",
+        "        for j in range(N):  # Ai와 Bi의 M-N 범위만큼 곱셈 수행\n",
+        "            curr_multi += Ai[j] * Bi[i + j]\n",
+        "\n",
+        "        max_multi = max(max_multi, curr_multi)\n",
+        "\n",
+        "    return max_multi\n",
+        "\n",
+        "\n",
+        "T = int(input())\n",
+        "for t in range(1, T+1):\n",
+        "    N, M = map(int, input().split())\n",
+        "    Ai = list(map(int, input().split()))\n",
+        "    Bi = list(map(int, input().split()))\n",
+        "\n",
+        "    result = my_multi(N, M, Ai, Bi)\n",
+        "\n",
+        "    print(f\"#{t} {result}\")"
+      ],
+      "metadata": {
+        "id": "XgDQPnzfwwXP"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# magnetic"
+      ],
+      "metadata": {
+        "id": "dKTPbkvYwx33"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "T = 10\n",
+        "\n",
+        "for t in range(1, T + 1):\n",
+        "    N = int(input())\n",
+        "    magnet = [list(map(int, input().split())) for _ in range(N)]\n",
+        "\n",
+        "    count = 0\n",
+        "\n",
+        "    for j in range(N):\n",
+        "        prev = 0\n",
+        "        for i in range(N):\n",
+        "            if magnet[i][j] == 1:\n",
+        "                prev = 1\n",
+        "            elif magnet[i][j] == 2 and prev == 1:\n",
+        "                count += 1\n",
+        "                prev = 0\n",
+        "\n",
+        "    print(f\"#{t} {count}\")"
+      ],
+      "metadata": {
+        "id": "teHs0hsLwxGB"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
